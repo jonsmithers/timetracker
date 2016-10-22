@@ -117,17 +117,19 @@
           this.startTime = moment();
         },
         _onStopTap: function() {
-          var startTime = this.startTime;
-          var stopTime  = moment();
-          this.startTime = null;
+          console.trace("stop button tapped");
+          this.debounce("where did zepto come from?", function() {
+            var startTime = this.startTime;
+            var stopTime  = moment();
+            this.startTime = null;
 
-          // var duration = getTimeDuration(startTime, stopTime);
-          this.push("timeLog", {
-            startTime: startTime.unix(),
-            stopTime: stopTime.unix(),
-            // duration: duration
-          });
-          console.log(this.timeLog);
+            // var duration = getTimeDuration(startTime, stopTime);
+            this.push("timeLog", {
+              startTime: startTime.unix(),
+              stopTime: stopTime.unix(),
+              // duration: duration
+            });
+          }.bind(this), 100);
         }
       });
     })();
