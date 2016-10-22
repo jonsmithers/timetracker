@@ -12,4 +12,25 @@
       return duration;
     }
   });
+  function TimeEntry(json) {
+    if (!(json.startTime) || !(json.stopTime)) {
+      throw new Error("missing value");
+    }
+
+    this.startTime = moment.unix(json.startTime);
+    this.stopTime = moment.unix(json.stopTime);
+    return this;
+  } 
+  TimeEntry.prototype.getStartDay = function() {
+    return this.startTime.format("dddd, MMMM DD");
+  };
+  TimeEntry.prototype.getStopDay = function() {
+    return this.stopTime.format("dddd, MMMM DD");
+  };
+  TimeEntry.prototype.getStartTime = function() {
+    return this.startTime.format("h:mm:ss a");
+  };
+  TimeEntry.prototype.getStopTime = function() {
+    return this.stopTime.format("h:mm:ss a");
+  };
 </script>

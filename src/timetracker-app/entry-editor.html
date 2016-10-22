@@ -1,17 +1,62 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 <dom-module id="entry-editor">
     <template>
-      this is the entry editor
+      <style>
+        .horizontalFlexLayout {
+          display: flex;
+        }
+        .horizontalFlexLayout > * {
+          flex-grow: 1;
+          flex-basis: 50vw;
+        }
+      </style>
+      <div class="horizontalFlexLayout">
+        <paper-item>
+          [[_computeStartDay(entry)]]
+        </paper-item>
+        <paper-item>
+          [[_computeStartTime(entry)]]
+        </paper-item>
+      </div>
+      <div class="horizontalFlexLayout">
+        <paper-item>
+          [[_computeStopDay(entry)]]
+        </paper-item>
+        <paper-item>
+          [[_computeStopTime(entry)]]
+        </paper-item>
+      </div>
     </template>
 
     <script>
       Polymer({
         is: "entry-editor",
 
-        properties: {},
+        properties: {
+          entry: Object
+        },
         listeners: {},
-        observers: [],
+        observers: [
+          "_onEntrySet(entry)"
+        ],
 
+        open: function(entryJson) {
+          this.entry = new TimeEntry(entryJson);
+        },
+        _onEntrySet: function() {
+        },
+        _computeStartDay: function(entry) {
+          return entry.getStartDay();
+        },
+        _computeStopDay: function(entry) {
+          return entry.getStopDay();
+        },
+        _computeStartTime: function(entry) {
+          return entry.getStartTime();
+        },
+        _computeStopTime: function(entry) {
+          return entry.getStopTime();
+        },
         created: function() {},
         ready: function() {},
         attached: function() {},

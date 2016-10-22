@@ -40,8 +40,10 @@
         <paper-toolbar>
           <paper-icon-button icon="close" dialog-dismiss></paper-icon-button>
           <span class="title">Time Entry</span>
+          <div style="flex-grow: 1;"></div>
+          <paper-button dialog-dismiss>save</paper-button>
         </paper-toolbar>
-        <entry-editor></entry-editor>
+        <entry-editor id="entryEditor"></entry-editor>
       </paper-dialog>
 
     </template>
@@ -50,7 +52,9 @@
       Polymer({
         is: "time-log",
 
-        _onEntryTap: function() {
+        _onEntryTap: function(e) {
+          var entry = e.model.item;
+          this.$.entryEditor.open(entry);
           this.$.dialog.open();
         },
 
