@@ -104,20 +104,23 @@
           this._loadFromStorage();
         },
         _onStartTimeSet: function() {
-          if (this.startTime) {
-            this._interval = setInterval(function() {
-              this.durationDisplay = getTimeDuration(this.startTime).format("h:mm:ss");
-            }.bind(this), 1000);
-          } else {
-            clearInterval(this._interval);
-            this.durationDisplay = "";
-          }
+          console.trace("_onStartTimeSet() (debounced)");
+          this.debounce("darnit zepto.min.js", function() {
+            if (this.startTime) {
+              this._interval = setInterval(function() {
+                this.durationDisplay = getTimeDuration(this.startTime).format("h:mm:ss");
+              }.bind(this), 1000);
+            } else {
+              clearInterval(this._interval);
+              this.durationDisplay = "";
+            }
+          }.bind(this), 100);
         },
         _onStartTap: function() {
           this.startTime = moment();
         },
         _onStopTap: function() {
-          console.trace("stop button tapped");
+          console.trace("_onStopTap() (debounced)");
           this.debounce("where did zepto come from?", function() {
             var startTime = this.startTime;
             var stopTime  = moment();
