@@ -37,11 +37,14 @@
       </iron-list>
 
       <paper-dialog id="dialog" entry-animation="slide-from-bottom-animation" exit-animation="slide-down-animation">
-        <paper-toolbar>
+        <paper-toolbar class="medium-tall">
           <paper-icon-button icon="close" dialog-dismiss></paper-icon-button>
           <span class="title">Time Entry</span>
           <div style="flex-grow: 1;"></div>
           <paper-button dialog-dismiss>save</paper-button>
+
+          <div class="bottom" id="durationText">
+          </div>
         </paper-toolbar>
         <entry-editor id="entryEditor"></entry-editor>
       </paper-dialog>
@@ -55,6 +58,7 @@
         _onEntryTap: function(e) {
           var entry = e.model.item;
           this.$.entryEditor.open(entry);
+          this.$.durationText.innerHTML = new TimeEntry(entry).getDuration();
           this.$.dialog.open();
         },
 

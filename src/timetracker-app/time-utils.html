@@ -33,4 +33,7 @@
   TimeEntry.prototype.getStopTime = function() {
     return this.stopTime.format("h:mm:ss a");
   };
+  TimeEntry.prototype.getDuration = function() {
+    return TimeUtils.getTimeDuration(this.startTime, this.stopTime).format("h [hours] m [minutes] s [seconds]");
+  };
 </script>
