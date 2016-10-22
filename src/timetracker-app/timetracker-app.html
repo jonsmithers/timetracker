@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="./time-log.html">
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment-duration-format/lib/moment-duration-format.js"></script>
 
@@ -13,8 +14,11 @@
     </style>
     <paper-button raised on-tap="_onStartTap" hidden="[[startTime]]">start</paper-button>
     <paper-button raised on-tap="_onStopTap" hidden="[[!startTime]]">stop</paper-button>
-    <paper-button raised on-tap="_clearStorage" style="background-color:red">reset</paper-button>
+    <paper-button raised on-tap="_onResetTap" style="background-color:red">reset</paper-button>
     <span>[[durationDisplay]]</span>
+
+    <time-log time-log="[[timeLog]]"></time-log>
+
     <paper-dialog id="welcomeDialog">
       <h2>Welcome</h2>
       <div>This is you're first time here. Coooool.</div>
@@ -22,25 +26,36 @@
         <paper-button dialog-dismiss>yeah</paper-button>
       </div>
     </paper-dialog>
+    <paper-dialog id="confirmResetDialog">
+      <h2>
+        Erase all data?
+      </h2>
+      <div>dangeah dangeah</div>
+      <div class="buttons">
+        <paper-button dialog-dismiss on-tap="_clearStorage">do it</paper-button>
+        <paper-button dialog-dismiss>noo</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
 
   <script>
+    /**
+     * @param {Moment} startTime
+     * @param {Moment} [endTime] - defaults to "now"
+     * @return {Duration} duration
+     */
+    const getTimeDuration = function(fromTime, toTime) {
+      toTime = toTime || moment();
+      var diffInMilliseconds = toTime.diff(fromTime, "milliseconds");
+      var duration = moment.duration(diffInMilliseconds, "milliseconds");
+      return duration;
+    };
+
     (function() {
 
       const storage_label = "timetracker-data";
 
-      /**
-       * @param {Moment} startTime
-       * @param {Moment} [endTime] - defaults to "now"
-       * @return {Duration} duration
-       */
-      const getTimeDuration = function(fromTime, toTime) {
-        toTime = toTime || moment();
-        var diffInMilliseconds = toTime.diff(fromTime, "milliseconds");
-        var duration = moment.duration(diffInMilliseconds, "milliseconds");
-        return duration;
-      };
 
       Polymer({
 
@@ -80,6 +95,9 @@
             startTime: (this.startTime ? this.startTime.unix() : null)
           }));
         },
+        _onResetTap: function() {
+          this.$.confirmResetDialog.open();
+        },
         _clearStorage: function() {
           this.startTime = null;
           localStorage.removeItem(storage_label);
@@ -109,6 +127,7 @@
             stopTime: stopTime.unix(),
             // duration: duration
           });
+          console.log(this.timeLog);
         }
       });
     })();
