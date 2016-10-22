@@ -23,7 +23,7 @@
           return moment.unix(time).format(" dddd MMM DD");
         },
         _formatDuration: function(from, to) {
-          var duration = getTimeDuration(moment.unix(from), moment.unix(to));
+          var duration = TimeUtils.getTimeDuration(moment.unix(from), moment.unix(to));
           return duration.format("h[h]m[m]s[s]");
         },
       });

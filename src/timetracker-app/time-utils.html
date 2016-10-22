@@ -1,0 +1,15 @@
+<script>
+  TimeUtils = Object.freeze({
+    /**
+     * @param {Moment} startTime
+     * @param {Moment} [endTime] - defaults to "now"
+     * @return {Duration} duration
+     */
+    getTimeDuration: function(fromTime, toTime) {
+      toTime = toTime || moment();
+      var diffInMilliseconds = toTime.diff(fromTime, "milliseconds");
+      var duration = moment.duration(diffInMilliseconds, "milliseconds");
+      return duration;
+    }
+  });
+</script>

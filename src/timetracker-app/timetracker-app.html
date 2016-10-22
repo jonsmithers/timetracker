@@ -8,6 +8,7 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="./time-log.html">
+<link rel="import" href="./time-utils.html">
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment-duration-format/lib/moment-duration-format.js"></script>
 
@@ -93,17 +94,6 @@
   </template>
 
   <script>
-    /**
-     * @param {Moment} startTime
-     * @param {Moment} [endTime] - defaults to "now"
-     * @return {Duration} duration
-     */
-    const getTimeDuration = function(fromTime, toTime) {
-      toTime = toTime || moment();
-      var diffInMilliseconds = toTime.diff(fromTime, "milliseconds");
-      var duration = moment.duration(diffInMilliseconds, "milliseconds");
-      return duration;
-    };
 
     (function() {
 
@@ -161,7 +151,7 @@
           this.debounce("darnit zepto.min.js", function() {
             if (this.startTime) {
               this._interval = setInterval(function() {
-                this.durationDisplay = getTimeDuration(this.startTime).format("h:mm:ss");
+                this.durationDisplay = TimeUtils.getTimeDuration(this.startTime).format("h:mm:ss");
               }.bind(this), 1000);
             } else {
               clearInterval(this._interval);
@@ -179,7 +169,6 @@
             var stopTime  = moment();
             this.startTime = null;
 
-            // var duration = getTimeDuration(startTime, stopTime);
             this.push("timeLog", {
               startTime: startTime.unix(),
               stopTime: stopTime.unix(),
