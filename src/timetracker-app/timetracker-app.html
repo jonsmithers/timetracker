@@ -1,4 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<script src="../../bower_components/moment/moment.js"></script>
+<script src="../../bower_components/moment-duration-format/lib/moment-duration-format.js"></script>
 
 <dom-module id="timetracker-app">
   <template>
@@ -7,21 +11,106 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+    <paper-button raised on-tap="_onStartTap" hidden="[[startTime]]">start</paper-button>
+    <paper-button raised on-tap="_onStopTap" hidden="[[!startTime]]">stop</paper-button>
+    <paper-button raised on-tap="_clearStorage" style="background-color:red">reset</paper-button>
+    <span>[[durationDisplay]]</span>
+    <paper-dialog id="welcomeDialog">
+      <h2>Welcome</h2>
+      <div>This is you're first time here. Coooool.</div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>yeah</paper-button>
+      </div>
+    </paper-dialog>
+
   </template>
 
   <script>
-    Polymer({
+    (function() {
 
-      is: 'timetracker-app',
+      const storage_label = "timetracker-data";
 
-      properties: {
-        prop1: {
-          type: String,
-          value: 'timetracker-app',
+      /**
+       * @param {Moment} startTime
+       * @param {Moment} [endTime] - defaults to "now"
+       * @return {Duration} duration
+       */
+      const getTimeDuration = function(fromTime, toTime) {
+        toTime = toTime || moment();
+        var diffInMilliseconds = toTime.diff(fromTime, "milliseconds");
+        var duration = moment.duration(diffInMilliseconds, "milliseconds");
+        return duration;
+      };
+
+      Polymer({
+
+        is: 'timetracker-app',
+
+        properties: {
+          startTime:       Object,
+          durationDisplay: String,
+          timeLog:         Array,
         },
-      },
+        observers: [
+          "_saveToStorage(startTime, timeLog)",
+          "_onStartTimeSet(startTime)"
+        ],
 
-    });
+        ready: function() {
+          this._loadFromStorage();
+        },
+
+        _loadFromStorage: function() {
+          // make sure storage is initialized
+          if (!localStorage.getItem(storage_label)) {
+            this.$.welcomeDialog.open();
+            localStorage.setItem(storage_label, JSON.stringify({
+              timeLog: [],
+              startTime: null
+            }));
+          }
+
+          var data = JSON.parse(localStorage.getItem(storage_label));
+          this.timeLog = data.timeLog;
+          this.startTime = data.startTime ? moment.unix(data.startTime) : null;
+        },
+        _saveToStorage: function() {
+          localStorage.setItem(storage_label, JSON.stringify({
+            timeLog: this.timeLog,
+            startTime: (this.startTime ? this.startTime.unix() : null)
+          }));
+        },
+        _clearStorage: function() {
+          this.startTime = null;
+          localStorage.removeItem(storage_label);
+          this._loadFromStorage();
+        },
+        _onStartTimeSet: function() {
+          if (this.startTime) {
+            this._interval = setInterval(function() {
+              this.durationDisplay = getTimeDuration(this.startTime).format("h:mm:ss");
+            }.bind(this), 1000);
+          } else {
+            clearInterval(this._interval);
+            this.durationDisplay = "";
+          }
+        },
+        _onStartTap: function() {
+          this.startTime = moment();
+        },
+        _onStopTap: function() {
+          var startTime = this.startTime;
+          var stopTime  = moment();
+          this.startTime = null;
+
+          // var duration = getTimeDuration(startTime, stopTime);
+          this.push("timeLog", {
+            startTime: startTime.unix(),
+            stopTime: stopTime.unix(),
+            // duration: duration
+          });
+        }
+      });
+    })();
   </script>
 </dom-module>
