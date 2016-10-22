@@ -1,9 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <dom-module id="time-log-entry">
     <template>
-      <div>[[_formatTime(entry.startTime)]]</div>
-      <div>[[_formatTime(entry.stopTime)]]</div>
-      <div>[[_formatDuration(entry.startTime, entry.stopTime)]]</div>
+      <paper-item>
+        <paper-item-body two-line>
+          <div>[[_formatTime(entry.startTime)]]</div>
+          <div secondary>[[_formatDuration(entry.startTime, entry.stopTime)]]</div>
+        </paper-item-body>
+      </paper-item>
     </template>
 
     <script>
@@ -15,7 +20,7 @@
         },
 
         _formatTime: function(time) {
-          return moment.unix(time).format("YYYY-MM-DD HH:mm:ss");
+          return moment.unix(time).format(" dddd MMM DD");
         },
         _formatDuration: function(from, to) {
           var duration = getTimeDuration(moment.unix(from), moment.unix(to));
