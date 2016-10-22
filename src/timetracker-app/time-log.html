@@ -5,8 +5,14 @@
 <dom-module id="time-log">
     <template>
       <style>
+        :host {
+          display: block;
+          position: relative;
+        }
         iron-list {
-          height: 300px;
+          position: absolute;
+          height: 100%;
+          width: 100%;
           border: 1px solid black;
         }
       </style>

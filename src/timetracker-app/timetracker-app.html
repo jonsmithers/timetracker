@@ -11,13 +11,33 @@
       :host {
         display: block;
       }
+      .verticalLayoutContainer {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+      div#durationDisplay {
+        padding: 20px;
+        text-align: center;
+        font-size: 30px;
+        font-family: monospace;
+      }
+      time-log {
+        flex-grow: 1;
+      }
     </style>
-    <paper-button raised on-tap="_onStartTap" hidden="[[startTime]]">start</paper-button>
-    <paper-button raised on-tap="_onStopTap" hidden="[[!startTime]]">stop</paper-button>
-    <paper-button raised on-tap="_onResetTap" style="background-color:red">reset</paper-button>
-    <span>[[durationDisplay]]</span>
-
-    <time-log time-log="[[timeLog]]"></time-log>
+    <div class="verticalLayoutContainer">
+      <div id="durationDisplay">[[durationDisplay]]</div>
+      <div>
+        <paper-button raised on-tap="_onStartTap" hidden="[[startTime]]">start</paper-button>
+        <paper-button raised on-tap="_onStopTap" hidden="[[!startTime]]">stop</paper-button>
+        <paper-button raised on-tap="_onResetTap" style="background-color:red">reset</paper-button>
+      </div>
+      <div style="height: 20px"></div>
+      <time-log time-log="[[timeLog]]"></time-log>
+    </div>
 
     <paper-dialog id="welcomeDialog">
       <h2>Welcome</h2>
