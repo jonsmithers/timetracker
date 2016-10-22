@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="./time-log-entry.html">
+
 <dom-module id="time-log">
     <template>
       <style>
@@ -11,11 +13,7 @@
 
       <iron-list id="timeLog" items="[[timeLog]]">
         <template>
-          <div style="border: 1px solid grey;">
-            <div>[[_formatTime(item.startTime)]]</div>
-            <div>[[_formatTime(item.stopTime)]]</div>
-            <div>[[_formatDuration(item.startTime, item.stopTime)]]</div>
-          </div>
+          <time-log-entry entry="[[item]]"></time-log-entry>
         </template>
       </iron-list>
 
@@ -28,14 +26,6 @@
         properties: {},
         listeners: {},
         observers: [],
-
-        _formatTime: function(time) {
-          return moment.unix(time).format("YYYY-MM-DD HH:mm:ss");
-        },
-        _formatDuration: function(from, to) {
-          var duration = getTimeDuration(moment.unix(from), moment.unix(to));
-          return duration.format("h[h]m[m]s[s]");
-        },
       });
     </script>
 </dom-module>

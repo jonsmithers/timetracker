@@ -1,0 +1,26 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<dom-module id="time-log-entry">
+    <template>
+      <div>[[_formatTime(entry.startTime)]]</div>
+      <div>[[_formatTime(entry.stopTime)]]</div>
+      <div>[[_formatDuration(entry.startTime, entry.stopTime)]]</div>
+    </template>
+
+    <script>
+      Polymer({
+        is: "time-log-entry",
+
+        properties: {
+          entry: Object
+        },
+
+        _formatTime: function(time) {
+          return moment.unix(time).format("YYYY-MM-DD HH:mm:ss");
+        },
+        _formatDuration: function(from, to) {
+          var duration = getTimeDuration(moment.unix(from), moment.unix(to));
+          return duration.format("h[h]m[m]s[s]");
+        },
+      });
+    </script>
+</dom-module>
