@@ -1,0 +1,7 @@
+{
+  "name": "timetracker",
+  "short_name": "timetracker",
+  "description": "Simple tool for tracking time",
+  "start_url": "/",
+  "display": "standalone"
+}
