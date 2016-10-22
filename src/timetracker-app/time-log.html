@@ -1,6 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-from-bottom-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-down-animation.html">
 <link rel="import" href="./time-log-entry.html">
+<link rel="import" href="./entry-editor.html">
 
 <dom-module id="time-log">
     <template>
@@ -15,19 +19,40 @@
           width: 100%;
           border: 1px solid black;
         }
+        paper-dialog {
+          margin: 0;
+          height: 100vh;
+          width: 100vh;
+        }
+        paper-dialog paper-toolbar {
+          margin: 0;
+          padding: 0;
+        }
       </style>
 
       <iron-list id="timeLog" items="[[timeLog]]">
         <template>
-          <time-log-entry entry="[[item]]"></time-log-entry>
+          <time-log-entry entry="[[item]]" on-tap="_onEntryTap"></time-log-entry>
         </template>
       </iron-list>
+
+      <paper-dialog id="dialog" entry-animation="slide-from-bottom-animation" exit-animation="slide-down-animation">
+        <paper-toolbar>
+          <paper-icon-button icon="close" dialog-dismiss></paper-icon-button>
+          <span class="title">Time Entry</span>
+        </paper-toolbar>
+        <entry-editor></entry-editor>
+      </paper-dialog>
 
     </template>
 
     <script>
       Polymer({
         is: "time-log",
+
+        _onEntryTap: function() {
+          this.$.dialog.open();
+        },
 
         properties: {},
         listeners: {},
