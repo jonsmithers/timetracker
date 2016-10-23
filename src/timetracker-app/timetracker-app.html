@@ -130,7 +130,7 @@
           timeLog:         Array,
         },
         listeners: {
-          "request-storage-save": "_onRequestStorageSave"
+          "request-entry-update": "_onRequestEntryUpdate"
         },
         observers: [
           "_saveToStorage(startTime, timeLog)",
@@ -161,7 +161,13 @@
             startTime: (this.startTime ? this.startTime.unix() : null)
           }));
         },
-        _onRequestStorageSave: function() {
+        _onRequestEntryUpdate: function(e) {
+          var newEntry = e.detail;
+          var index = this.timeLog.findIndex(function(oldEntry) {
+            return (oldEntry.id == newEntry.id);
+          });
+          debugger;
+          this.set(["timeLog", index], newEntry);
         },
         _onResetTap: function() {
           this.$.confirmResetDialog.open();
@@ -195,9 +201,9 @@
             this.startTime = null;
 
             this.unshift("timeLog", {
+              id: performance.now(),
               startTime: startTime.unix(),
               stopTime: stopTime.unix(),
-              // duration: duration
             });
             this.$.toast.show({
               text: "Time logged.",

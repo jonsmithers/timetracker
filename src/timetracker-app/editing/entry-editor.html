@@ -40,36 +40,18 @@
         properties: {
           entry: Object,
         },
-        listeners: {},
-        observers: [
-          "_onEntryJsonSet(entryJson)"
-        ],
 
-        _onEntryJsonSet: function(entryJson) {
-          this.entry = new TimeEntry(entryJson);
-        },
         _computeDay: function(m) {
           return m.format("dddd, MMMM DD");
-          // return entry.getStartDay();
-        },
-        _computeStopDay: function(entry) {
-          return entry.getStopDay();
         },
         _computeTime: function(m) {
           return m.format("h:mm a");
-        },
-        _computeStopTime: function(entry) {
-          return entry.getStopTime();
         },
         _editStartTime: function(e) {
           this.$.timePicker.open(this.entry.startTime).then(function(m) {
             this.set("entry.startTime", m);
           }.bind(this));
         },
-        created: function() {},
-        ready: function() {},
-        attached: function() {},
-        detached: function() {}
       });
     </script>
 </dom-module>
