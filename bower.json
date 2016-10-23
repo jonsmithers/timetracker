@@ -10,7 +10,8 @@
     "iron-list": "^1.3.11",
     "paper-drawer-panel": "^1.0.10",
     "paper-item": "^1.2.1",
-    "iron-pages": "^1.0.8"
+    "iron-pages": "^1.0.8",
+    "paper-slider": "^1.0.12"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

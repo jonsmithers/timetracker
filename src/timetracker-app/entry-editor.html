@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="./time-picker.html">
 <dom-module id="entry-editor">
     <template>
       <style>
@@ -12,20 +13,24 @@
       </style>
       <div class="horizontalFlexLayout">
         <paper-item>
-          [[_computeStartDay(entry)]]
+          [[_computeDay(entry.startTime)]]
         </paper-item>
-        <paper-item>
-          [[_computeStartTime(entry)]]
+        <paper-item on-tap="_editStartTime">
+          [[_computeTime(entry.startTime)]]
         </paper-item>
       </div>
       <div class="horizontalFlexLayout">
         <paper-item>
-          [[_computeStopDay(entry)]]
+          [[_computeDay(entry.stopTime)]]
         </paper-item>
         <paper-item>
-          [[_computeStopTime(entry)]]
+          [[_computeTime(entry.stopTime)]]
         </paper-item>
       </div>
+
+
+
+      <time-picker id="timePicker"></time-picker>
     </template>
 
     <script>
@@ -45,17 +50,23 @@
         },
         _onEntrySet: function() {
         },
-        _computeStartDay: function(entry) {
-          return entry.getStartDay();
+        _computeDay: function(m) {
+          return m.format("dddd, MMMM DD");
+          // return entry.getStartDay();
         },
         _computeStopDay: function(entry) {
           return entry.getStopDay();
         },
-        _computeStartTime: function(entry) {
-          return entry.getStartTime();
+        _computeTime: function(m) {
+          return m.format("h:mm a");
         },
         _computeStopTime: function(entry) {
           return entry.getStopTime();
+        },
+        _editStartTime: function(e) {
+          this.$.timePicker.open(this.entry.startTime).then(function(m) {
+            this.set("entry.startTime", m);
+          }.bind(this));
         },
         created: function() {},
         ready: function() {},

@@ -169,7 +169,7 @@
             var stopTime  = moment();
             this.startTime = null;
 
-            this.push("timeLog", {
+            this.unshift("timeLog", {
               startTime: startTime.unix(),
               stopTime: stopTime.unix(),
               // duration: duration

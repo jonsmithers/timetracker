@@ -21,18 +21,6 @@
     this.stopTime = moment.unix(json.stopTime);
     return this;
   } 
-  TimeEntry.prototype.getStartDay = function() {
-    return this.startTime.format("dddd, MMMM DD");
-  };
-  TimeEntry.prototype.getStopDay = function() {
-    return this.stopTime.format("dddd, MMMM DD");
-  };
-  TimeEntry.prototype.getStartTime = function() {
-    return this.startTime.format("h:mm:ss a");
-  };
-  TimeEntry.prototype.getStopTime = function() {
-    return this.stopTime.format("h:mm:ss a");
-  };
   TimeEntry.prototype.getDuration = function() {
     return TimeUtils.getTimeDuration(this.startTime, this.stopTime).format("h [hours] m [minutes] s [seconds]");
   };

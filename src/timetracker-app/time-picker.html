@@ -1,0 +1,103 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<dom-module id="time-picker">
+    <template>
+      <style>
+        .center {
+          text-align: center;
+        }
+        paper-slider {
+          width: calc(100vw - 2 * 24px);
+        }
+        paper-dialog {
+          margin: 0;
+        }
+      </style>
+      <paper-dialog id="dialog">
+        <h2>time</h2>
+        <div class="center">[[_computeTime(sliderImmediateValue)]]</div>
+        <paper-slider id="slider" value="{{sliderValue}}" immediate-value="{{sliderImmediateValue}}"></paper-slider>
+        <div class="buttons">
+          <paper-button dialog-dismiss on-tap="_onOkTap">ok</paper-button>
+        </div>
+      </paper-dialog>
+    </template>
+
+    <script>
+      Polymer({
+        is: "time-picker",
+
+        ready: function() {
+          this.$.slider.max = 96;
+        },
+        open: function(moment) {
+          this.sliderValue = this._convertMomentToScale(moment);
+          this.$.dialog.open();
+          return new Promise(function(resolve, reject) {
+            this._resolvePromise = resolve;
+            this._rejectPromise = reject;
+          }.bind(this));
+        },
+        _convertMomentToScale(m) {
+          var hour = m.hours();
+          var minute = m.minutes();
+
+          var scale = 0;
+          scale += 4*hour;
+          scale += Math.round(minute / 15);
+          return scale;
+        },
+        _convertScaleToMoment(scale) {
+          var minuteInterval = scale % 4;
+          var hour = (scale - minuteInterval) / 4;
+          var minute = 60 / 4 * minuteInterval;
+          return moment({
+            hour: hour,
+            minute: minute
+          });
+        },
+        _computeTime: function(sliderValue) {
+          var selectedMoment = this._convertScaleToMoment(sliderValue);
+
+          return selectedMoment.format("h:mm a");
+
+          // var minuteInterval = sliderValue % 4;
+          // var hour = (sliderValue - minuteInterval) / 4;
+          // var minute = 60 / 4 * minuteInterval;
+          // var ampm = "am";
+          //
+          // if (hour >= 12) {
+          //   ampm = "pm";
+          // }
+          // if (hour > 12) {
+          //   hour = hour % 12;
+          // }
+          // if (hour === 0) {
+          //   hour = 12;
+          // }
+          //
+          // hour = ""+hour;
+          // minute = ""+minute;
+          // if (minute.length == 1) {
+          //   minute = "0" + minute;
+          // }
+
+          return hour + ":" + minute + " " + ampm;
+        },
+        _onOkTap: function() {
+          var m = this._convertScaleToMoment(this.sliderValue);
+          this._resolvePromise(m);
+        },
+
+        properties: {},
+        listeners: {},
+        observers: [],
+
+        created: function() {},
+        attached: function() {},
+        detached: function() {}
+      });
+    </script>
+</dom-module>
