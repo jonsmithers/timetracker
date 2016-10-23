@@ -13,6 +13,9 @@
     }
   });
   function TimeEntry(json) {
+    if (json.constructor !== Object) {
+      throw new Error("invalid param");
+    }
     if (!(json.startTime) || !(json.stopTime)) {
       throw new Error("missing value");
     }
@@ -21,9 +24,12 @@
     this.startTime = moment.unix(json.startTime);
     this.stopTime = moment.unix(json.stopTime);
     return this;
-  } 
+  }
   TimeEntry.prototype.getDuration = function() {
     return TimeUtils.getTimeDuration(this.startTime, this.stopTime).format("h [hours] m [minutes] s [seconds]");
+  };
+  TimeEntry.prototype.getDay = function() {
+    return this.startTime.format(" dddd MMM DD");
   };
   TimeEntry.prototype.toJson = function() {
     return {
@@ -31,5 +37,18 @@
       startTime: this.startTime.unix(),
       stopTime: this.stopTime.unix()
     };
+  };
+  TimeEntry.parseJson = function(json) {
+    return new TimeEntry(json);
+  };
+  TimeEntry.toJson = function(entry) {
+    return entry.toJson();
+  };
+  TimeEntry.test = function() {
+    return new TimeEntry({
+      startTime: moment(),
+        stopTime: moment(),
+        id: performance.now(),
+    });
   };
 </script>

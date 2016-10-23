@@ -133,7 +133,9 @@
           "request-entry-update": "_onRequestEntryUpdate"
         },
         observers: [
-          "_saveToStorage(startTime, timeLog)",
+          "_saveToStorage(startTime)",
+          "_saveToStorage(timeLog)",
+          "_saveToStorage(timeLog.splices)",
           "_onStartTimeSet(startTime)"
         ],
 
@@ -152,22 +154,28 @@
           }
 
           var data = JSON.parse(localStorage.getItem(storage_label));
-          this.timeLog = data.timeLog;
+          this.timeLog = data.timeLog.map(TimeEntry.parseJson);
           this.startTime = data.startTime ? moment.unix(data.startTime) : null;
         },
         _saveToStorage: function() {
-          localStorage.setItem(storage_label, JSON.stringify({
-            timeLog: this.timeLog,
-            startTime: (this.startTime ? this.startTime.unix() : null)
-          }));
+          this.debounce("save to storage", function() {
+            console.log('saving');
+            localStorage.setItem(storage_label, JSON.stringify({
+              timeLog: this.timeLog.map(TimeEntry.toJson),
+              startTime: (this.startTime ? this.startTime.unix() : null)
+            }));
+          }.bind(this), 1000);
         },
         _onRequestEntryUpdate: function(e) {
           var newEntry = e.detail;
           var index = this.timeLog.findIndex(function(oldEntry) {
             return (oldEntry.id == newEntry.id);
           });
-          debugger;
           this.set(["timeLog", index], newEntry);
+
+          var timeLog = this.timeLog;
+          this.timeLog = [];
+          this.timeLog = timeLog;
         },
         _onResetTap: function() {
           this.$.confirmResetDialog.open();
@@ -178,37 +186,33 @@
           this._loadFromStorage();
         },
         _onStartTimeSet: function() {
-          console.trace("_onStartTimeSet() (debounced)");
-          this.debounce("darnit zepto.min.js", function() {
-            if (this.startTime) {
-              this._interval = setInterval(function() {
-                this.durationDisplay = TimeUtils.getTimeDuration(this.startTime).format("h:mm:ss");
-              }.bind(this), 1000);
-            } else {
-              clearInterval(this._interval);
-              this.durationDisplay = "0";
-            }
-          }.bind(this), 100);
+          console.trace("_onStartTimeSet()");
+          if (this.startTime) {
+            this._interval = setInterval(function() {
+              this.durationDisplay = TimeUtils.getTimeDuration(this.startTime).format("h:mm:ss");
+            }.bind(this), 1000);
+          } else {
+            clearInterval(this._interval);
+            this.durationDisplay = "0";
+          }
         },
         _onStartTap: function() {
           this.startTime = moment();
         },
         _onStopTap: function() {
-          console.trace("_onStopTap() (debounced)");
-          this.debounce("where did zepto come from?", function() {
-            var startTime = this.startTime;
-            var stopTime  = moment();
-            this.startTime = null;
+          console.trace("_onStopTap()");
+          var startTime = this.startTime;
+          var stopTime  = moment();
+          this.startTime = null;
 
-            this.unshift("timeLog", {
-              id: performance.now(),
-              startTime: startTime.unix(),
-              stopTime: stopTime.unix(),
-            });
-            this.$.toast.show({
-              text: "Time logged.",
-            });
-          }.bind(this), 100);
+          this.unshift("timeLog", new TimeEntry({
+            id: performance.now(),
+            startTime: startTime.unix(),
+            stopTime: stopTime.unix(),
+          }));
+          this.$.toast.show({
+            text: "Time logged.",
+          });
         },
         _onHamburgerTap: function() {
           this.$.drawer.openDrawer();

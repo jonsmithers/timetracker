@@ -5,8 +5,8 @@
     <template>
       <paper-item>
         <paper-item-body two-line>
-          <div>[[_formatTime(entry.startTime)]]</div>
-          <div secondary>[[_formatDuration(entry.startTime, entry.stopTime)]]</div>
+          <div>[[_formatTime(entry)]]</div>
+          <div secondary>[[_formatDuration(entry, entry.startTime, entry.stopTime)]]</div>
         </paper-item-body>
       </paper-item>
     </template>
@@ -19,12 +19,12 @@
           entry: Object
         },
 
-        _formatTime: function(time) {
-          return moment.unix(time).format(" dddd MMM DD");
+        _formatTime: function(entry) {
+          console.log(entry);
+          return entry.getDay();
         },
-        _formatDuration: function(from, to) {
-          var duration = TimeUtils.getTimeDuration(moment.unix(from), moment.unix(to));
-          return duration.format("h[h]m[m]s[s]");
+        _formatDuration: function(entry) {
+          return entry.getDuration();
         },
       });
     </script>

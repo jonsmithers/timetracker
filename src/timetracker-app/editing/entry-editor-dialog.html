@@ -41,14 +41,15 @@
         listeners: {},
         observers: [],
         open: function(entry) {
-          this.entry = new TimeEntry(entry);
+          this.entry = entry;
           this.$.dialog.open();
         },
         _computeDuration: function() {
-          return new TimeEntry(this.entry).getDuration();
+          return this.entry.getDuration();
         },
         _onSave: function() {
-          this.fire("request-entry-update", this.entry.toJson());
+          console.log('save clicked');
+          this.fire("request-entry-update", this.entry);
         }
       });
     </script>
