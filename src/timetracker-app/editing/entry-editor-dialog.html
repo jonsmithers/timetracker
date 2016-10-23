@@ -20,7 +20,7 @@
         <paper-toolbar class="medium-tall">
           <paper-icon-button icon="close" dialog-dismiss></paper-icon-button>
           <span class="title" style="flex-grow: 1;">Time Entry</span>
-          <paper-button dialog-dismiss>delete</paper-button>
+          <paper-button dialog-dismiss on-tap="_onDelete">delete</paper-button>
           <paper-button dialog-dismiss on-tap="_onSave">save</paper-button>
 
           <div class="bottom" id="durationText">
@@ -48,8 +48,10 @@
           return this.entry.getDuration();
         },
         _onSave: function() {
-          console.log('save clicked');
           this.fire("request-entry-update", this.entry);
+        },
+        _onDelete: function() {
+          this.fire("request-entry-delete", this.entry);
         }
       });
     </script>

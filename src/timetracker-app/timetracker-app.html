@@ -137,7 +137,8 @@
           timeLog:         Array,
         },
         listeners: {
-          "request-entry-update": "_onRequestEntryUpdate"
+          "request-entry-update": "_onRequestEntryUpdate",
+          "request-entry-delete": "_onRequestEntryDelete"
         },
         observers: [
           "_saveToStorage(startTime)",
@@ -181,6 +182,13 @@
             return (oldEntry.id == newEntry.id);
           });
           this.set(["timeLog", index], newEntry.clone());
+        },
+        _onRequestEntryDelete: function(e) {
+          var entry = e.detail;
+          var index = this.timeLog.findIndex(function(oldEntry) {
+            return (oldEntry.id == entry.id);
+          });
+          this.splice("timeLog", index, 1);
         },
         _onResetTap: function() {
           this.$.confirmResetDialog.open();
