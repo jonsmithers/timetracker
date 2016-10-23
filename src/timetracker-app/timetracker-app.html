@@ -10,6 +10,7 @@
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="./log-visualizations.html">
 <link rel="import" href="./time-log.html">
 <link rel="import" href="./time-utils.html">
 <script src="../../bower_components/moment/moment.js"></script>
@@ -47,6 +48,7 @@
         <paper-listbox attrForSelected="page-name" selected="selectedPageName">
           <paper-item on-tap="_onDrawerItemTap" page-name="timer">Timer</paper-item>
           <paper-item on-tap="_onDrawerItemTap" page-name="log">Log</paper-item>
+          <paper-item on-tap="_onDrawerItemTap" page-name="visualizations">Visualizations</paper-item>
           <paper-item on-tap="_onDrawerItemTap" page-name="settings">Settings</paper-item>
           <paper-item on-tap="_onDrawerItemTap" page-name="about">About</paper-item>
         </paper-listbox>
@@ -68,6 +70,7 @@
           <div page-name="settings">
             <paper-button raised on-tap="_onResetTap" style="background-color:red">reset</paper-button>
           </div>
+          <log-visualizations page-name="visualizations"></log-visualizations>
           <div page-name="about">
             The progressive-web-app time logger. Made with Polymer.
           </div>

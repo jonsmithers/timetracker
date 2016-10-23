@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+<dom-module id="log-visualizations">
+    <template>
+      <style>
+        google-chart {
+          width: 100vw;
+          height: 100vh;
+        }
+      </style>
+      There could be visualizations like this:
+      <google-chart
+            type='pie'
+            options='{ "title": "Distribution of days in 2001Q1", "chartArea": {"width": "800%", "height": "80%"}, "legend": {"position": "right"} }'
+            cols='[{"label":"Day", "type":"string"}, {"label":"Entries", "type":"number"}]'
+            rows='[["Monday", 31],["Tuesday", 28],["Wednesday", 31]]'>
+      </google-chart>
+    </template>
+
+    <script>
+        Polymer({
+            is: "log-visualizations",
+
+            properties: {},
+            listeners: {},
+            observers: [],
+
+            created: function() {},
+            ready: function() {},
+            attached: function() {},
+            detached: function() {}
+        });
+    </script>
+</dom-module>
