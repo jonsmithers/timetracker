@@ -1,0 +1,82 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-dropdown/iron-dropdown.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/paper-slider/paper-slider.html">
+<dom-module id="time-field">
+    <template>
+      <style>
+        .dropdown-content {
+          background-color: grey;;
+          width: 100vw;
+          height: 200px;
+        }
+        paper-slider {
+          width: 100%;
+        }
+      </style>
+      <paper-item on-tap="_onTap">
+        [[_computeTime(moment)]]
+        <iron-dropdown id="ironDropdown" horizontal-align="right" open-animation-config="[[_ironDropdownOpenAnimationConfig]]">
+          <div class="dropdown-content">
+            <div style="text-align:right;">text</div>
+            <paper-slider id="slider" value="{{sliderValue}}" immediate-value="{{sliderImmediateValue}}"></paper-slider>
+          </div>
+        </iron-dropdown>
+      </paper-item>
+    </template>
+
+    <script>
+      (function() {
+        var config = {
+          ANIMATION_CUBIC_BEZIER: 'cubic-bezier(.3,.95,.5,1)',
+          MAX_ANIMATION_TIME_MS: 400
+        };
+
+        Polymer({
+          is: "time-field",
+          properties: {
+            moment: Object,
+            _ironDropdownOpenAnimationConfig: {
+              type: Object,
+              value: function() {
+                return [{
+                  name: 'fade-in-animation',
+                  timing: {
+                    delay: 100,
+                    duration: 200
+                  }
+                }, {
+                  name: 'paper-menu-grow-width-animation',
+                  timing: {
+                    delay: 100,
+                    duration: 150,
+                    easing: config.ANIMATION_CUBIC_BEZIER
+                  }
+                }, {
+                  name: 'paper-menu-grow-height-animation',
+                  timing: {
+                    delay: 100,
+                    duration: 275,
+                    easing: config.ANIMATION_CUBIC_BEZIER
+                  }
+                }];
+              }
+            },
+          },
+
+          _onTap: function() {
+            console.log('open');
+            this.$.ironDropdown.open();
+          },
+          _computeTime: function(m) {
+            return m.format("h:mm a");
+          },
+          created: function() {},
+          ready: function() {},
+          attached: function() {},
+          detached: function() {}
+        });
+      })();
+    </script>
+</dom-module>

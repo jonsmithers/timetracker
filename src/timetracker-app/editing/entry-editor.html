@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="./time-picker.html">
+<link rel="import" href="./time-field.html">
 <dom-module id="entry-editor">
     <template>
       <style>
@@ -23,9 +24,10 @@
         <paper-item>
           [[_computeDay(entry.stopTime)]]
         </paper-item>
-        <paper-item>
-          [[_computeTime(entry.stopTime)]]
-        </paper-item>
+        <time-field moment="[[entry.stopTime]]"></time-field>
+        <!-- <paper&#45;item> -->
+        <!--   [[_computeTime(entry.stopTime)]] -->
+        <!-- </paper&#45;item> -->
       </div>
 
 
