@@ -120,6 +120,9 @@
           durationDisplay: String,
           timeLog:         Array,
         },
+        listeners: {
+          "request-storage-save": "_onRequestStorageSave"
+        },
         observers: [
           "_saveToStorage(startTime, timeLog)",
           "_onStartTimeSet(startTime)"
@@ -148,6 +151,8 @@
             timeLog: this.timeLog,
             startTime: (this.startTime ? this.startTime.unix() : null)
           }));
+        },
+        _onRequestStorageSave: function() {
         },
         _onResetTap: function() {
           this.$.confirmResetDialog.open();

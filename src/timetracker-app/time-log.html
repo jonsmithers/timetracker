@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/neon-animation/animations/slide-from-bottom-animation.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/slide-down-animation.html">
 <link rel="import" href="./time-log-entry.html">
-<link rel="import" href="./editing/entry-editor.html">
+<link rel="import" href="./editing/entry-editor-dialog.html">
 
 <dom-module id="time-log">
     <template>
@@ -19,15 +19,6 @@
           width: 100%;
           border: 1px solid black;
         }
-        paper-dialog {
-          margin: 0;
-          height: 100vh;
-          width: 100vh;
-        }
-        paper-dialog paper-toolbar {
-          margin: 0;
-          padding: 0;
-        }
       </style>
 
       <iron-list id="timeLog" items="[[timeLog]]">
@@ -36,18 +27,7 @@
         </template>
       </iron-list>
 
-      <paper-dialog id="dialog" entry-animation="slide-from-bottom-animation" exit-animation="slide-down-animation">
-        <paper-toolbar class="medium-tall">
-          <paper-icon-button icon="close" dialog-dismiss></paper-icon-button>
-          <span class="title" style="flex-grow: 1;">Time Entry</span>
-          <paper-button dialog-dismiss>delete</paper-button>
-          <paper-button dialog-dismiss>save</paper-button>
-
-          <div class="bottom" id="durationText">
-          </div>
-        </paper-toolbar>
-        <entry-editor id="entryEditor"></entry-editor>
-      </paper-dialog>
+      <entry-editor-dialog id="entryDialog"></entry-editor-dialog>
 
     </template>
 
@@ -57,9 +37,7 @@
 
         _onEntryTap: function(e) {
           var entry = e.model.item;
-          this.$.entryEditor.open(entry);
-          this.$.durationText.innerHTML = new TimeEntry(entry).getDuration();
-          this.$.dialog.open();
+          this.$.entryDialog.open(entry);
         },
 
         properties: {},

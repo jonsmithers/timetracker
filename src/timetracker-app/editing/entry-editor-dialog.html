@@ -1,0 +1,49 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="./entry-editor.html">
+<dom-module id="entry-editor-dialog">
+    <template>
+      <style>
+        paper-dialog {
+          margin: 0;
+          height: 100vh;
+          width: 100vh;
+        }
+        paper-dialog paper-toolbar {
+          margin: 0;
+          padding: 0;
+        }
+      </style>
+      <paper-dialog id="dialog" entry-animation="slide-from-bottom-animation" exit-animation="slide-down-animation">
+        <paper-toolbar class="medium-tall">
+          <paper-icon-button icon="close" dialog-dismiss></paper-icon-button>
+          <span class="title" style="flex-grow: 1;">Time Entry</span>
+          <paper-button dialog-dismiss>delete</paper-button>
+          <paper-button dialog-dismiss>save</paper-button>
+
+          <div class="bottom" id="durationText">
+            [[_computeDuration(entry)]]
+          </div>
+        </paper-toolbar>
+        <entry-editor id="entryEditor" entry-json="[[entry]]"></entry-editor>
+      </paper-dialog>
+    </template>
+
+    <script>
+      Polymer({
+        is: "entry-editor-dialog",
+
+        properties: {
+          entry: Object
+        },
+        listeners: {},
+        observers: [],
+        open: function(entry) {
+          this.entry = entry;
+          this.$.dialog.open();
+        },
+        _computeDuration: function() {
+          return new TimeEntry(this.entry).getDuration();
+        }
+      });
+    </script>
+</dom-module>

@@ -38,17 +38,15 @@
         is: "entry-editor",
 
         properties: {
-          entry: Object
+          entry: Object,
         },
         listeners: {},
         observers: [
-          "_onEntrySet(entry)"
+          "_onEntryJsonSet(entryJson)"
         ],
 
-        open: function(entryJson) {
+        _onEntryJsonSet: function(entryJson) {
           this.entry = new TimeEntry(entryJson);
-        },
-        _onEntrySet: function() {
         },
         _computeDay: function(m) {
           return m.format("dddd, MMMM DD");
