@@ -136,6 +136,7 @@
           "_saveToStorage(startTime)",
           "_saveToStorage(timeLog)",
           "_saveToStorage(timeLog.splices)",
+          "_saveToStorage(timeLog.*)",
           "_onStartTimeSet(startTime)"
         ],
 
@@ -171,11 +172,7 @@
           var index = this.timeLog.findIndex(function(oldEntry) {
             return (oldEntry.id == newEntry.id);
           });
-          this.set(["timeLog", index], newEntry);
-
-          var timeLog = this.timeLog;
-          this.timeLog = [];
-          this.timeLog = timeLog;
+          this.set(["timeLog", index], newEntry.clone());
         },
         _onResetTap: function() {
           this.$.confirmResetDialog.open();

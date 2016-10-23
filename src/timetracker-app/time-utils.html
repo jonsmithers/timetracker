@@ -38,6 +38,9 @@
       stopTime: this.stopTime.unix()
     };
   };
+  TimeEntry.prototype.clone = function() {
+    return TimeEntry.parseJson(this.toJson());
+  };
   TimeEntry.parseJson = function(json) {
     return new TimeEntry(json);
   };
