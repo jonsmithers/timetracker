@@ -6,6 +6,9 @@
 <link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="./time-log.html">
 <link rel="import" href="./time-utils.html">
@@ -41,17 +44,19 @@
       <div drawer>
         <paper-toolbar class="tall">
         </paper-toolbar>
-        <paper-item on-tap="_onDrawerItemTap" page-name="timer">Timer</paper-item>
-        <paper-item on-tap="_onDrawerItemTap" page-name="log">Log</paper-item>
-        <paper-item on-tap="_onDrawerItemTap" page-name="settings">Settings</paper-item>
-        <paper-item on-tap="_onDrawerItemTap" page-name="about">About</paper-item>
+        <paper-listbox attrForSelected="page-name" selected="selectedPageName">
+          <paper-item on-tap="_onDrawerItemTap" page-name="timer">Timer</paper-item>
+          <paper-item on-tap="_onDrawerItemTap" page-name="log">Log</paper-item>
+          <paper-item on-tap="_onDrawerItemTap" page-name="settings">Settings</paper-item>
+          <paper-item on-tap="_onDrawerItemTap" page-name="about">About</paper-item>
+        </paper-listbox>
       </div>
       <paper-header-panel main>
         <paper-toolbar>
           <paper-icon-button icon="menu" on-tap="_onHamburgerTap"></paper-icon-button>
           <div class="title">Time Log</div>
         </paper-toolbar>
-        <iron-pages id="ironPages" attr-for-selected="page-name" selected="timer">
+        <iron-pages id="ironPages" attr-for-selected="page-name" selected="[[selectedPageName]]">
           <div page-name="timer">
             <div id="durationDisplay">[[durationDisplay]]</div>
             <div>
@@ -90,6 +95,9 @@
         <paper-button dialog-dismiss>noo</paper-button>
       </div>
     </paper-dialog>
+    <paper-toast id="toast">
+      <paper-button on-tap="_onDrawerItemTap" page-name="log">View</paper-button>
+    </paper-toast>
 
   </template>
 
@@ -174,6 +182,9 @@
               stopTime: stopTime.unix(),
               // duration: duration
             });
+            this.$.toast.show({
+              text: "Time logged.",
+            });
           }.bind(this), 100);
         },
         _onHamburgerTap: function() {
@@ -181,7 +192,8 @@
         },
         _onDrawerItemTap: function(e) {
           var pageName = e.srcElement.getAttribute("page-name");
-          this.$.ironPages.selected = pageName;
+          this.selectedPageName = pageName;
+          // this.$.ironPages.selected = pageName;
           this.$.drawer.closeDrawer();
         },
       });
