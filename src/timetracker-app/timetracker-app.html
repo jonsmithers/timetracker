@@ -71,7 +71,7 @@
       </div>
       <paper-header-panel main>
         <paper-toolbar>
-          <paper-icon-button icon="menu" on-tap="_onHamburgerTap"></paper-icon-button>
+          <paper-icon-button id="menuButton" icon="menu" on-tap="_onHamburgerTap"></paper-icon-button>
           <div class="title">Time Log</div>
         </paper-toolbar>
         <iron-pages id="ironPages" attr-for-selected="page-name" selected="[[selectedPageName]]">
@@ -138,7 +138,9 @@
         },
         listeners: {
           "request-entry-update": "_onRequestEntryUpdate",
-          "request-entry-delete": "_onRequestEntryDelete"
+          "request-entry-delete": "_onRequestEntryDelete",
+          "paper-responsive-change": "_onResponsiveChange"
+
         },
         observers: [
           "_saveToStorage(startTime)",
@@ -189,6 +191,9 @@
             return (oldEntry.id == entry.id);
           });
           this.splice("timeLog", index, 1);
+        },
+        _onResponsiveChange: function(e) {
+          this.$.menuButton.style.display = e.detail.narrow ? "inline-block" : "none";
         },
         _onResetTap: function() {
           this.$.confirmResetDialog.open();
