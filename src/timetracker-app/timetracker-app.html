@@ -57,7 +57,7 @@
         height: 100%;
       }
     </style>
-    <paper-drawer-panel id="drawer">
+    <paper-drawer-panel id="paperDrawerPanel">
       <div drawer>
         <paper-toolbar class="tall">
         </paper-toolbar>
@@ -151,6 +151,7 @@
         ],
 
         ready: function() {
+          this.$.paperDrawerPanel._forceNarrowChanged(); // hack to fire "paper-responsive-change"
           this.selectedPageName = "timer";
           this._loadFromStorage();
         },
@@ -233,13 +234,13 @@
           });
         },
         _onHamburgerTap: function() {
-          this.$.drawer.openDrawer();
+          this.$.paperDrawerPanel.openDrawer();
         },
         _onDrawerItemTap: function(e) {
           var pageName = e.srcElement.getAttribute("page-name");
           this.selectedPageName = pageName;
           // this.$.ironPages.selected = pageName;
-          this.$.drawer.closeDrawer();
+          this.$.paperDrawerPanel.closeDrawer();
         },
       });
     })();
