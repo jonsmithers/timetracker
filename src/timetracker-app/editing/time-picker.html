@@ -23,7 +23,7 @@
       </style>
       <paper-dialog id="dialog" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
         <h2>time</h2>
-        <div class="center">[[_computeTime(sliderImmediateValue)]]</div>
+        <div class="center">[[_computeTime(sliderImmediateValue, referenceMoment)]]</div>
         <paper-slider id="slider" value="{{sliderValue}}" immediate-value="{{sliderImmediateValue}}"></paper-slider>
         <div class="buttons">
           <paper-button dialog-dismiss on-tap="_onOkTap">ok</paper-button>

@@ -1,4 +1,5 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="./time-picker.html">
 <link rel="import" href="./time-field.html">
 <dom-module id="entry-editor">
@@ -24,15 +25,12 @@
         <paper-item>
           [[_computeDay(entry.stopTime)]]
         </paper-item>
-        <time-field moment="[[entry.stopTime]]"></time-field>
-        <!-- <paper&#45;item> -->
-        <!--   [[_computeTime(entry.stopTime)]] -->
-        <!-- </paper&#45;item> -->
+        <paper-item on-tap="_editStopTime">
+          [[_computeTime(entry.stopTime)]]
+        </paper-item>
       </div>
-
-
-
       <time-picker id="timePicker"></time-picker>
+      <paper-toast id="errorPaperToast"></paper-toast>
     </template>
 
     <script>
@@ -49,9 +47,27 @@
         _computeTime: function(m) {
           return m.format("h:mm a");
         },
-        _editStartTime: function(e) {
-          this.$.timePicker.open(this.entry.startTime).then(function(m) {
-            this.set("entry.startTime", m);
+        _editStopTime: function() {
+          this._editTime('stopTime');
+        },
+        _editStartTime: function() {
+          this._editTime('startTime');
+        },
+        _editTime: function(whichTime) {
+          this.$.timePicker.open(this.get(['entry',whichTime])).then(function(m) {
+
+            // validate
+            if (whichTime == "startTime" && m.isAfter(this.entry.stopTime)) {
+              this.$.errorPaperToast.show({text: "start time is after stop time"});
+              return;
+            }
+            if ("stopTime" == whichTime && m.isBefore(this.entry.startTime)) {
+              this.$.errorPaperToast.show({text:"end time is before start time"});
+              return;
+            }
+
+            this.set(['entry',whichTime], m);
+
           }.bind(this));
         },
       });
