@@ -33,8 +33,8 @@
 
     <script>
       (function() {
-        const STEPS_PER_HOUR = 60;
-        const TOTAL_STEPS = 60;
+        const STEPS_PER_HOUR = 12;
+        const TOTAL_STEPS = 30;
         Polymer({
           is: "time-picker",
 
@@ -54,15 +54,20 @@
             return this.referenceMoment && this.referenceSliderValue;
           },
           _convertMomentToSliderValue(m) {
-                   this.referenceMoment = m;
-            return this.referenceSliderValue = TOTAL_STEPS / 2;
+            // round moment
+            var minutesPerStep = 60 / STEPS_PER_HOUR;
+            var minutes = m.minutes();
+            var roundingDifference = minutes % minutesPerStep;
+            this.referenceMoment = m.clone().subtract(roundingDifference, 'minutes').subtract(m.seconds(), 'seconds');
+            this.referenceSliderValue = TOTAL_STEPS / 2;
+            return this.referenceSliderValue;
           },
           _convertSliderValueToScale(scale) {
             var differenceSliderValue = scale - this.referenceSliderValue;
             var remainderSteps        = differenceSliderValue % STEPS_PER_HOUR;
             var differenceHours       = (differenceSliderValue - remainderSteps) / STEPS_PER_HOUR;
             var steps_per_minute      = STEPS_PER_HOUR/60;
-            var differenceMinutes     = steps_per_minute * remainderSteps;
+            var differenceMinutes     = remainderSteps / steps_per_minute;
             return this.referenceMoment.clone().add(differenceHours, 'hours').add(differenceMinutes, 'minutes');
           },
           _computeTime: function(sliderValue, referenceMoment) {
