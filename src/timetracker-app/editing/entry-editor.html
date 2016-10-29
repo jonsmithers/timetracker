@@ -1,7 +1,9 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-date-picker/paper-date-picker.html">
 <link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="./time-picker.html">
 <link rel="import" href="./time-field.html">
+<link rel="import" href="./time-picker.html">
+
 <dom-module id="entry-editor">
     <template>
       <style>
@@ -12,9 +14,13 @@
           flex-grow: 1;
           flex-basis: 50vw;
         }
+        paper-date-picker {
+          margin:0 !important;
+          padding:0 !important;
+        }
       </style>
       <div class="horizontalFlexLayout">
-        <paper-item>
+        <paper-item on-tap="_editDate">
           [[_computeDay(entry.startTime)]]
         </paper-item>
         <paper-item on-tap="_editStartTime">
@@ -22,7 +28,7 @@
         </paper-item>
       </div>
       <div class="horizontalFlexLayout">
-        <paper-item>
+        <paper-item on-tap="_editDate">
           [[_computeDay(entry.stopTime)]]
         </paper-item>
         <paper-item on-tap="_editStopTime">
@@ -30,6 +36,18 @@
         </paper-item>
       </div>
       <time-picker id="timePicker"></time-picker>
+      <paper-dialog id="datePickerDialog" 
+                    class="paper-date-picker-dialog"
+                    on-iron-overlay-closed="dismissDialog" 
+                    entry-animation="fade-in-animation" 
+                    exit-animation="fade-out-animation">
+        <paper-date-picker id="datePicker" date="[[date]]"></paper-date-picker>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm>OK</paper-button>
+        </div>
+      </paper-dialog>
+
       <paper-toast id="errorPaperToast"></paper-toast>
     </template>
 
@@ -39,6 +57,11 @@
 
         properties: {
           entry: Object,
+        },
+
+        _editDate: function() {
+          this.$.datePickerDialog.open();
+          this.$.datePicker.date = this.entry.startTime.format("YYYY-MM-DD");
         },
 
         _computeDay: function(m) {
