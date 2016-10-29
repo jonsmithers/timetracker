@@ -7,13 +7,15 @@
 <link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="./log-visualizations.html">
 <link rel="import" href="./time-log.html">
 <link rel="import" href="./time-utils.html">
+
+<!-- order matters for moment plugin -->
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment-duration-format/lib/moment-duration-format.js"></script>
 
@@ -58,16 +60,18 @@
       }
     </style>
     <paper-drawer-panel id="paperDrawerPanel">
-      <div drawer>
+      <div drawer class="verticalLayoutContainer">
         <paper-toolbar class="tall">
         </paper-toolbar>
-        <paper-listbox attrForSelected="page-name" selected="selectedPageName">
-          <paper-item on-tap="_onDrawerItemTap" page-name="timer">Timer</paper-item>
-          <paper-item on-tap="_onDrawerItemTap" page-name="log">Log</paper-item>
-          <paper-item on-tap="_onDrawerItemTap" page-name="visualizations">Visualizations</paper-item>
-          <paper-item on-tap="_onDrawerItemTap" page-name="settings">Settings</paper-item>
-          <paper-item on-tap="_onDrawerItemTap" page-name="about">About</paper-item>
-        </paper-listbox>
+        <div class="flexGrow" style="overflow-y: auto;">
+          <paper-listbox attrForSelected="page-name" selected="selectedPageName">
+            <paper-item on-tap="_onDrawerItemTap" page-name="timer">Timer</paper-item>
+            <paper-item on-tap="_onDrawerItemTap" page-name="log">Log</paper-item>
+            <paper-item on-tap="_onDrawerItemTap" page-name="visualizations">Visualizations</paper-item>
+            <paper-item on-tap="_onDrawerItemTap" page-name="settings">Settings</paper-item>
+            <paper-item on-tap="_onDrawerItemTap" page-name="about">About</paper-item>
+          </paper-listbox>
+        </div>
       </div>
       <paper-header-panel main>
         <paper-toolbar>
@@ -88,7 +92,7 @@
           </div>
           <log-visualizations page-name="visualizations"></log-visualizations>
           <div page-name="about">
-            The progressive-web-app time logger. Made with Polymer.
+            The progressive-web-app time logger. Made with Polymer. <a href="https://github.com/jonsmithers/timetracker">GitHub</a>.
           </div>
         </iron-pages>
       </paper-header-panel>
