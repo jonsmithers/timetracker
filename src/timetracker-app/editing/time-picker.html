@@ -1,7 +1,9 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../../bower_components/paper-slider/paper-slider.html">
-<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../bower_components/paper-slider/paper-slider.html">
 <dom-module id="time-picker">
     <template>
       <style>
@@ -14,8 +16,12 @@
         paper-dialog {
           margin: 0;
         }
+        :host {
+          --paper-slider-active-color: var(--paper-grey-400);
+            --paper-slider-height: 4px;
+        }
       </style>
-      <paper-dialog id="dialog">
+      <paper-dialog id="dialog" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
         <h2>time</h2>
         <div class="center">[[_computeTime(sliderImmediateValue)]]</div>
         <paper-slider id="slider" value="{{sliderValue}}" immediate-value="{{sliderImmediateValue}}"></paper-slider>
@@ -26,78 +32,61 @@
     </template>
 
     <script>
-      Polymer({
-        is: "time-picker",
+      (function() {
+        const STEPS_PER_HOUR = 60;
+        const TOTAL_STEPS = 60;
+        Polymer({
+          is: "time-picker",
 
-        ready: function() {
-          this.$.slider.max = 96;
-        },
-        open: function(moment) {
-          this.sliderValue = this._convertMomentToScale(moment);
-          this.$.dialog.open();
-          return new Promise(function(resolve, reject) {
-            this._resolvePromise = resolve;
-            this._rejectPromise = reject;
-          }.bind(this));
-        },
-        _convertMomentToScale(m) {
-          var hour = m.hours();
-          var minute = m.minutes();
+          ready: function() {
+            this.$.slider.max = TOTAL_STEPS;
+            this.$.slider.maxMarkers = 2;
+          },
+          open: function(moment) {
+            this.sliderValue = this._convertMomentToSliderValue(moment);
+            this.$.dialog.open();
+            return new Promise(function(resolve, reject) {
+              this._resolvePromise = resolve;
+              this._rejectPromise = reject;
+            }.bind(this));
+          },
+          _isInitialized() {
+            return this.referenceMoment && this.referenceSliderValue;
+          },
+          _convertMomentToSliderValue(m) {
+                   this.referenceMoment = m;
+            return this.referenceSliderValue = TOTAL_STEPS / 2;
+          },
+          _convertSliderValueToScale(scale) {
+            var differenceSliderValue = scale - this.referenceSliderValue;
+            var remainderSteps        = differenceSliderValue % STEPS_PER_HOUR;
+            var differenceHours       = (differenceSliderValue - remainderSteps) / STEPS_PER_HOUR;
+            var steps_per_minute      = STEPS_PER_HOUR/60;
+            var differenceMinutes     = steps_per_minute * remainderSteps;
+            return this.referenceMoment.clone().add(differenceHours, 'hours').add(differenceMinutes, 'minutes');
+          },
+          _computeTime: function(sliderValue, referenceMoment) {
+            if (!this._isInitialized()) {
+              return;
+            }
 
-          var scale = 0;
-          scale += 4*hour;
-          scale += Math.round(minute / 15);
-          return scale;
-        },
-        _convertScaleToMoment(scale) {
-          var minuteInterval = scale % 4;
-          var hour = (scale - minuteInterval) / 4;
-          var minute = 60 / 4 * minuteInterval;
-          return moment({
-            hour: hour,
-            minute: minute
-          });
-        },
-        _computeTime: function(sliderValue) {
-          var selectedMoment = this._convertScaleToMoment(sliderValue);
+            var selectedMoment = this._convertSliderValueToScale(sliderValue);
 
-          return selectedMoment.format("h:mm a");
+            return selectedMoment.format("h:mm a");
+          },
+          _onOkTap: function() {
+            var m = this._convertSliderValueToScale(this.sliderValue);
+            this._resolvePromise(m);
+          },
 
-          // var minuteInterval = sliderValue % 4;
-          // var hour = (sliderValue - minuteInterval) / 4;
-          // var minute = 60 / 4 * minuteInterval;
-          // var ampm = "am";
-          //
-          // if (hour >= 12) {
-          //   ampm = "pm";
-          // }
-          // if (hour > 12) {
-          //   hour = hour % 12;
-          // }
-          // if (hour === 0) {
-          //   hour = 12;
-          // }
-          //
-          // hour = ""+hour;
-          // minute = ""+minute;
-          // if (minute.length == 1) {
-          //   minute = "0" + minute;
-          // }
+          properties: {},
+          listeners: {},
+          observers: [],
 
-          return hour + ":" + minute + " " + ampm;
-        },
-        _onOkTap: function() {
-          var m = this._convertScaleToMoment(this.sliderValue);
-          this._resolvePromise(m);
-        },
-
-        properties: {},
-        listeners: {},
-        observers: [],
-
-        created: function() {},
-        attached: function() {},
-        detached: function() {}
-      });
+          created: function() {},
+          attached: function() {},
+          detached: function() {}
+        });
+      })();
     </script>
 </dom-module>
